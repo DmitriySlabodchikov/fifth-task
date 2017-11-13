@@ -1,0 +1,107 @@
+<!doctype html>
+<head>
+  <meta charset="utf-8">
+  <title> Layout </title>
+  <script type="text/javascript" src="http://cdn.webix.com/edge/webix_debug.js"></script>
+  <link rel="stylesheet" type="text/css" href="http://cdn.webix.com/edge/webix.css">
+  
+  <script type="text/javascript" src="views/tabledata.js"></script>
+  <script type="text/javascript" src="views/treedata.js"></script>
+  <script type="text/javascript" src="views/usersdata.js"></script>
+  
+  <script type="text/javascript" src="views/dashboard.js"></script>  
+  <script type="text/javascript" src="views/users.js"></script>
+  <script type="text/javascript" src="views/tree.js"></script>    
+  
+  <style type="text/css">
+	.grayBackground,.grayBackground .webix_list{
+		background-color: #F2F2F2;
+	}
+	.name{
+		font-size: 20px;
+		font-weight:bold;
+		padding-left:30px;
+	}
+	.status{
+		color: green;
+		text-align:center;
+	}
+	.line{
+		border-bottom: 1px solid #dedede;
+	}
+  </style>
+</head>
+<body>
+  <script type="text/javascript" charset="utf-8">
+  //webix.debug=true;
+  webix.ready(function(){
+  
+		var header = {
+			view:"toolbar",
+			cols:[
+				{view:"label", css:"name", label:"My App"},
+				
+				{view:"button", css:"profileButton", type:"icon", icon:"user", label:"Profile", autowidth:true}
+			]
+		};
+
+
+		var list = {css:"grayBackground", rows:[ 
+				{ 	
+					id:"mylist",
+					select:true,
+					view:"list",
+					id:"mylist",
+					autoheight:true,
+					scroll:false,
+					on:{
+						onAfterSelect:function(id){ 
+							$$(id).show();
+						}
+					},
+					data:[ "Dashboard", "Users", "Products", "Locations" ]
+				},
+				{ },
+				{ view:"label", css:"status", label:"<span class='webix_icon fa-check'></span>connected"} 
+				], gravity: 0.3};
+		
+		var bottom = { 
+			view:"label", align:"center", label:"The software is provided by <a href='https://webix.com/'>https://webix.com/</a>. All rights reserved ©."
+		};
+		 
+
+
+		var main = {
+		  cells:[ 
+			{ id:"Dashboard", cols:[{rows:[table, dataview]}, form]},
+			{ id:"Users",  rows:[userFilter,listUsers,bar]},
+			{ id:"Products", rows:[tree]},
+			{ id:"Locations", template:"Locations view"}
+		  ]
+		};		
+		
+		webix.protoUI({
+			name:"dataview"
+		}, webix.EditAbility, webix.ui.dataview);
+		webix.protoUI({
+			name:"list"
+		}, webix.EditAbility, webix.ui.list);
+		
+		webix.ui({
+			rows:[
+				header,
+				{cols:[list, {view:"resizer"}, main]},
+				bottom
+			]
+
+		});
+		
+		$$("dataview").sync(filmCollection);
+		$$("datatable").sync(filmCollection);
+		$$("form").bind($$("dataview"));
+		$$("form").bind($$("datatable"));
+	});
+
+  </script>
+</body>
+</html>
